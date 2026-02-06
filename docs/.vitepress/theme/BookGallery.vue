@@ -5,6 +5,9 @@ import { withBase } from 'vitepress';
 
 const books = ref([]);
 const searchQuery = ref('');
+const selectedLanguage = ref('');
+const selectedOwner = ref('');
+const selectedLocation = ref('');
 const loading = ref(true);
 
 onMounted(async () => {
@@ -21,14 +24,35 @@ onMounted(async () => {
   }
 });
 
+const getUniqueValues = (field) => {
+  const values = books.value
+    .map(book => book[field])
+    .filter(val => val && val.trim().length > 0);
+  return [...new Set(values)].sort();
+};
+
+const uniqueLanguages = computed(() => getUniqueValues('Language'));
+const uniqueOwners = computed(() => getUniqueValues('Owner'));
+const uniqueLocations = computed(() => getUniqueValues('Location'));
+
 const filteredBooks = computed(() => {
-  if (!searchQuery.value) return books.value;
-  const query = searchQuery.value.toLowerCase();
   return books.value.filter(book => {
-    return Object.values(book).some(val => 
-      String(val).toLowerCase().includes(query)
-    );
-  });
+    // Text search filter
+    if (searchQuery.value) {
+      const query = searchQuery.value.toLowerCase();
+      const matchesSearch = Object.values(book).some(val => 
+        String(val).toLowerCase().includes(query)
+      );
+      if (!matchesSearch) return false;
+    }
+
+    // Dropdown filters
+    if (selectedLanguage.value && book.Language !== selectedLanguage.value) return false;
+    if (selectedOwner.value && book.Owner !== selectedOwner.value) return false;
+    if (selectedLocation.value && book.Location !== selectedLocation.value) return false;
+
+    return true;
+  }).reverse();
 });
 
 const isBorrowed = (book) => {
@@ -53,9 +77,41 @@ const handleImageError = (e) => {
       <input 
         v-model="searchQuery" 
         type="text" 
-        placeholder="Search books, authors, owners..." 
+        placeholder="Search books..." 
         class="search-input"
       />
+      
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="language-filter" class="filter-label">Language</label>
+          <select v-model="selectedLanguage" id="language-filter" class="filter-select">
+            <option value="">All Languages</option>
+            <option v-for="lang in uniqueLanguages" :key="lang" :value="lang">
+              {{ lang }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="owner-filter" class="filter-label">Owner</label>
+          <select v-model="selectedOwner" id="owner-filter" class="filter-select">
+            <option value="">All Owners</option>
+            <option v-for="owner in uniqueOwners" :key="owner" :value="owner">
+              {{ owner }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="location-filter" class="filter-label">Location</label>
+          <select v-model="selectedLocation" id="location-filter" class="filter-select">
+            <option value="">All Locations</option>
+            <option v-for="location in uniqueLocations" :key="location" :value="location">
+              {{ location }}
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div v-if="loading" class="loading">Loading library...</div>
@@ -84,8 +140,8 @@ const handleImageError = (e) => {
           
           <div class="tags">
             <span v-if="book.Language" class="tag language">{{ book.Language }}</span>
-            <span v-if="book.Owner" class="tag owner">Owner: {{ book.Owner }}</span>
-            <span v-if="book.Location" class="tag location">Loc: {{ book.Location }}</span>
+            <span v-if="book.Owner" class="tag owner">{{ book.Owner }}</span>
+            <span v-if="book.Location" class="tag location">{{ book.Location }}</span>
           </div>
         </div>
       </div>
