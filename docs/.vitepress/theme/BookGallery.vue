@@ -8,6 +8,7 @@ const searchQuery = ref('');
 const selectedLanguage = ref('');
 const selectedOwner = ref('');
 const selectedLocation = ref('');
+const selectedSort = ref('default');
 const loading = ref(true);
 
 onMounted(async () => {
@@ -36,7 +37,7 @@ const uniqueOwners = computed(() => getUniqueValues('Owner'));
 const uniqueLocations = computed(() => getUniqueValues('Location'));
 
 const filteredBooks = computed(() => {
-  return books.value.filter(book => {
+  let result = books.value.filter(book => {
     // Text search filter
     if (searchQuery.value) {
       const query = searchQuery.value.toLowerCase();
@@ -52,7 +53,23 @@ const filteredBooks = computed(() => {
     if (selectedLocation.value && book.Location !== selectedLocation.value) return false;
 
     return true;
-  }).reverse();
+  });
+
+  // Apply sorting
+  if (selectedSort.value === 'language') {
+    result.sort((a, b) => (a.Language || '').localeCompare(b.Language || ''));
+  } else if (selectedSort.value === 'owner') {
+    result.sort((a, b) => (a.Owner || '').localeCompare(b.Owner || ''));
+  } else if (selectedSort.value === 'location') {
+    result.sort((a, b) => (a.Location || '').localeCompare(b.Location || ''));
+  } else if (selectedSort.value === 'reverse') {
+    // Keep original order (no reverse)
+  } else {
+    // default sort (reverse order as input)
+    result.reverse();
+  }
+
+  return result;
 });
 
 const isBorrowed = (book) => {
@@ -109,6 +126,17 @@ const handleImageError = (e) => {
             <option v-for="location in uniqueLocations" :key="location" :value="location">
               {{ location }}
             </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sort-filter" class="filter-label">Sort</label>
+          <select v-model="selectedSort" id="sort-filter" class="filter-select">
+            <option value="default">Default</option>
+            <option value="language">By Language</option>
+            <option value="owner">By Owner</option>
+            <option value="location">By Location</option>
+            <option value="reverse">Reverse</option>
           </select>
         </div>
       </div>
