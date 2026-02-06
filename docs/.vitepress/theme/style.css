@@ -160,6 +160,13 @@
   }
 }
 
+.results-count {
+  margin-top: 1.5rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.95rem;
+  letter-spacing: 0.2px;
+}
+
 .book-card {
   background: var(--vp-c-bg-soft);
   border-radius: 12px;

@@ -178,13 +178,17 @@ const handleImageError = (e) => {
         </div>
       </div>
     </div>
+
+    <div v-if="!loading && books.length > 0" class="results-count">
+      {{ filteredBooks.length }} of {{ books.length }} books
+    </div>
     
     <div v-if="!loading && books.length === 0" class="no-results">
         Library currently unavailable!
     </div>
 
     <div v-else-if="!loading && filteredBooks.length === 0" class="no-results">
-        No books found matching "{{ searchQuery }}"
+        No books found matching filters.
     </div>
   </div>
 </template>
