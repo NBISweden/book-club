@@ -1,0 +1,24 @@
+{
+  "name": "book-club",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "fetch-data": "node scripts/fetch-books.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "csv-parse": "^6.1.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.27"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.4",
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,218 @@
+
+:root {
+  --vp-c-brand: #95b540;
+  --vp-c-brand-light: #95b540;
+  --vp-c-brand-dark: #779033;
+  --vp-c-brand-1: var(--vp-c-brand);
+  --vp-home-hero-name-color: var(--vp-c-brand);
+  --docsearch-primary-color: var(--vp-c-brand);
+  --docsearch-logo-color: var(--vp-c-brand);
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-text-2);
+}
+
+.image-src {
+    /* For the hero image */
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.vp-doc p {
+  line-height: 1.3;
+  margin: 0rem 0 0.8rem 0;
+}
+
+.vp-doc h1, .vp-doc h2, .vp-doc h3 {
+  margin-top: 0;
+}
+
+/* BookGallery Component Styles */
+.gallery-container {
+  padding: 2rem 0;
+}
+
+.search-wrapper {
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 4px 25px rgba(var(--vp-c-brand-rgb), 0.2);
+  transform: scale(1.02);
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 1200px) {
+  .book-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.book-card {
+  background: var(--vp-c-bg-soft);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.book-card.borrowed {
+  border-color: rgba(255, 99, 71, 0.4);
+  background: linear-gradient(to bottom right, var(--vp-c-bg-soft), rgba(255, 99, 71, 0.1));
+}
+
+.book-cover-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 125%; /* Aspect ratio 4:5 */
+  overflow: hidden;
+  background: var(--vp-c-bg-mute);
+}
+
+.book-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.book-card:hover .book-cover {
+  transform: scale(1.05);
+}
+
+.borrowed-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  text-align: center;
+  padding: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.book-details {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.dark .book-details {
+  background: #191919;
+}
+
+.book-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.book-author {
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+}
+
+.tags {
+  line-height: 1.2;
+}
+
+.tag {
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0.1rem 0.3rem;
+  margin: 0.1rem;
+  display: inline-block;
+  line-height: 1.3;
+  border-radius: 4px;
+  background: var(--vp-c-bg-mute);
+  color: var(--vp-c-text-2);
+  border: 1px solid var(--vp-c-divider);
+}
+
+.tag.language {
+  background: var(--vp-c-brand);
+  color: white;
+  border-color: rgba(var(--vp-c-brand-rgb), 0.2);
+}
+
+.dark .tag.language {
+  color: black;
+  background: var(--vp-c-brand-dark);
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: var(--vp-c-text-2);
+  font-size: 1.2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: var(--vp-c-text-2);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
