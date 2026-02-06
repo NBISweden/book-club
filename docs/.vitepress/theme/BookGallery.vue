@@ -1,7 +1,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { withBase } from 'vitepress';
+import { withBase, useData } from 'vitepress';
+
+const { theme } = useData();
 
 const books = ref([]);
 const searchQuery = ref('');
@@ -10,6 +12,8 @@ const selectedOwner = ref('');
 const selectedLocation = ref('');
 const selectedSort = ref('default');
 const loading = ref(true);
+
+const cardsPerRow = computed(() => theme.value.cardsPerRow || 4);
 
 onMounted(async () => {
   try {
@@ -144,7 +148,7 @@ const handleImageError = (e) => {
 
     <div v-if="loading" class="loading">Loading library...</div>
 
-    <div v-else class="book-grid">
+    <div v-else class="book-grid" :style="{ '--cards-per-row': cardsPerRow }">
       <div 
         v-for="(book, index) in filteredBooks" 
         :key="index" 
