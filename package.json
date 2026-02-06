@@ -4,9 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "docs:dev": "npm run fetch-data && vitepress dev docs",
+    "docs:build": "npm run fetch-data && vitepress build docs",
+    "docs:preview": "npm run fetch-data && vitepress preview docs",
     "fetch-data": "node scripts/fetch-books.js"
   },
   "keywords": [],

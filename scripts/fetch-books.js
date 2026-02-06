@@ -71,15 +71,18 @@ const fetchUrl = (url) => {
 
                 fs.writeFileSync(OUTPUT_FILE, JSON.stringify(cleanedRecords, null, 2));
                 console.log(`Successfully saved ${cleanedRecords.length} books to ${OUTPUT_FILE}`);
+                process.exit(0);
             } catch (error) {
                 console.error('Error parsing CSV:', error.message);
                 fs.writeFileSync(OUTPUT_FILE, JSON.stringify([], null, 2));
+                process.exit(1);
             }
         });
 
     }).on('error', (e) => {
         console.error(`Got error: ${e.message}`);
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify([], null, 2));
+        process.exit(1);
     });
 };
 
