@@ -12,6 +12,7 @@ const selectedSort = ref('reverse');
 const loading = ref(true);
 const selectedBook = ref(null);
 const showModal = ref(false);
+const selectedBookIndex = ref(null);
 
 const cardsPerRow = computed(() => theme.value.cardsPerRow || 4);
 
@@ -38,6 +39,8 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+  
+  window.addEventListener('keydown', handleKeydown);
 });
 
 const getUniqueValues = (field) => {
@@ -112,12 +115,45 @@ const handleImageError = (e) => {
 
 const openModal = (book) => {
   selectedBook.value = book;
+  selectedBookIndex.value = filteredBooks.value.indexOf(book);
   showModal.value = true;
 };
 
 const closeModal = () => {
   showModal.value = false;
   selectedBook.value = null;
+  selectedBookIndex.value = null;
+};
+
+const navigateToBook = (book) => {
+  selectedBook.value = book;
+  selectedBookIndex.value = filteredBooks.value.indexOf(book);
+};
+
+const navigatePrevious = () => {
+  if (selectedBookIndex.value === null || selectedBookIndex.value === 0) return;
+  const newIndex = selectedBookIndex.value - 1;
+  navigateToBook(filteredBooks.value[newIndex]);
+};
+
+const navigateNext = () => {
+  if (selectedBookIndex.value === null || selectedBookIndex.value >= filteredBooks.value.length - 1) return;
+  const newIndex = selectedBookIndex.value + 1;
+  navigateToBook(filteredBooks.value[newIndex]);
+};
+
+const handleKeydown = (event) => {
+  if (!showModal.value) return;
+  
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    navigatePrevious();
+  } else if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    navigateNext();
+  } else if (event.key === 'Escape') {
+    closeModal();
+  }
 };
 </script>
 
@@ -227,6 +263,27 @@ const closeModal = () => {
     <transition name="modal">
       <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
         <div class="modal-content">
+          <!-- Navigation buttons -->
+          <button 
+            class="modal-nav-button modal-nav-prev"
+            :disabled="selectedBookIndex === null || selectedBookIndex === 0"
+            @click="navigatePrevious"
+            aria-label="Previous book"
+            title="Previous book (Left arrow)"
+          >
+            <span class="nav-arrow"></span>
+          </button>
+          
+          <button 
+            class="modal-nav-button modal-nav-next"
+            :disabled="selectedBookIndex === null || selectedBookIndex >= filteredBooks.length - 1"
+            @click="navigateNext"
+            aria-label="Next book"
+            title="Next book (Right arrow)"
+          >
+            <span class="nav-arrow"></span>
+          </button>
+          
           <div class="modal-body" v-if="selectedBook">
             <div class="modal-left">
               <img 
