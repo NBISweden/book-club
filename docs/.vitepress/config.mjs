@@ -53,6 +53,7 @@ export default defineConfig({
         
         nav: [
             { text: 'Home', link: '/' },
+            { text: 'About', link: '/about' },
             { text: 'Google Sheet', link: `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}` }
         ],
 
