@@ -193,8 +193,8 @@ const closeModal = () => {
         </div>
         
         <div class="book-details">
-          <h4 class="book-title">{{ getFieldValue(book, titleField) }}</h4>
-          <p class="book-author">by {{ getFieldValue(book, authorField) }}</p>
+          <div class="book-title">{{ getFieldValue(book, titleField) }}</div>
+          <div class="book-author">by {{ getFieldValue(book, authorField) }}</div>
           
           <div class="tags">
             <template v-for="tag in cardTags" :key="tag.field">
@@ -238,8 +238,8 @@ const closeModal = () => {
             </div>
             
             <div class="modal-right">
-              <h2 class="modal-title">{{ getFieldValue(selectedBook, titleField) }}</h2>
-              <p class="modal-author">by {{ getFieldValue(selectedBook, authorField) }}</p>
+              <div class="modal-title">{{ getFieldValue(selectedBook, titleField) }}</div>
+              <div class="modal-author">by {{ getFieldValue(selectedBook, authorField) }}</div>
               
               <div class="modal-info">
                 <!-- Borrowed status displayed separately if present -->

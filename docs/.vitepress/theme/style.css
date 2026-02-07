@@ -1,6 +1,7 @@
 
 :root {
   font-size: 14px;
+  --vp-font-family-base: 'Montserrat', sans-serif;
   --vp-c-brand: #95b540;
   --vp-c-brand-light: #95b540;
   --vp-c-brand-dark: #779033;
@@ -97,6 +98,7 @@
   min-width: 300px;
   padding: 0.55rem 1.5rem;
   font-size: var(--p-fs);
+  font-family: var(--vp-font-family-base);
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-alt);
@@ -137,6 +139,7 @@
 .filter-select {
   padding: 0.6rem 0.8rem;
   font-size: var(--p-fs);
+  font-family: var(--vp-font-family-base);
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-alt);
@@ -285,7 +288,7 @@
 
 .book-title {
   margin: 0 0 0.5rem 0;
-  font-size: var(--p-fs);
+  font-size: var(--h5-fs);
   line-height: 1.3;
   font-weight: 600;
   color: var(--vp-c-text-1);
@@ -294,8 +297,9 @@
 
 .book-author {
   margin: 0 0 1rem 0;
-  font-size: var(--s-fs);
+  font-size: var(--p-fs);
   color: var(--vp-c-text-2);
+  line-height: 1.3;
 }
 
 .tags {
@@ -407,7 +411,7 @@
 
 .modal-title {
   margin: 0 0 0.5rem 0;
-  font-size: var(--h1-font-size);
+  font-size: var(--h2-fs);
   font-weight: 700;
   color: var(--vp-c-text-1);
   line-height: 1.2;
@@ -415,7 +419,7 @@
 
 .modal-author {
   margin: 0 0 1.5rem 0;
-  font-size: var(--p-fs);
+  font-size: var(--h5-fs);
   color: var(--vp-c-text-2);
   font-style: italic;
 }

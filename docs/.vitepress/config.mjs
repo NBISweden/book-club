@@ -4,12 +4,17 @@ import 'dotenv/config'
 
 const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID
 
+// Font configuration
+const FONT_FAMILY = 'Montserrat' // Change this to use a different Google Font
+const FONT_GOOGLE_URL = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'
+
 export default defineConfig({
     title: "NBIS Book Club",
     description: "A shared book collection for NBIS",
     base: '/book-club/', // Assuming repo name is book-club
     themeConfig: {
         logo: '/favicon.svg',
+        font: FONT_FAMILY, // Google Font family name
         cardsPerRow: 5, // Number of book cards per row (default: 4)
         
         // Field configuration for book display
@@ -69,6 +74,9 @@ export default defineConfig({
         // Search removed as per user request
     },
     head: [
+        ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+        ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+        ['link', { rel: 'stylesheet', href: FONT_GOOGLE_URL }],
         ['link', { rel: 'icon', href: '/book-club/favicon.ico' }],
         ['link', { rel: 'icon', type: 'image/svg+xml', href: '/book-club/favicon.svg' }],
         ['link', { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/book-club/favicon-96x96.png' }],
