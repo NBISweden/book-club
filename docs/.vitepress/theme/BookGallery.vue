@@ -180,7 +180,7 @@ const closeModal = () => {
         </div>
         
         <div class="book-details">
-          <h3 class="book-title">{{ book.Title }}</h3>
+          <h4 class="book-title">{{ book.Title }}</h4>
           <p class="book-author">by {{ book.Author }}</p>
           
           <div class="tags">
@@ -223,21 +223,25 @@ const closeModal = () => {
               <p class="modal-author">by {{ selectedBook.Author }}</p>
               
               <div class="modal-info">
-                <div v-if="selectedBook.Language" class="modal-field">
-                  <strong>Language:</strong> {{ selectedBook.Language }}
+                <div v-if="selectedBook.Language" class="modal-field modal-field-language">
+                  <div class="modal-key">Language</div>
+                  <div class="modal-value">{{ selectedBook.Language }}</div>
                 </div>
-                <div v-if="selectedBook.Owner" class="modal-field">
-                  <strong>Owner:</strong> {{ selectedBook.Owner }}
+                <div v-if="selectedBook.Owner" class="modal-field modal-field-owner">
+                  <div class="modal-key">Owner</div>
+                  <div class="modal-value">{{ selectedBook.Owner }}</div>
                 </div>
-                <div v-if="selectedBook.Location" class="modal-field">
-                  <strong>Location:</strong> {{ selectedBook.Location }}
+                <div v-if="selectedBook.Location" class="modal-field modal-field-location">
+                  <div class="modal-key">Location</div>
+                  <div class="modal-value">{{ selectedBook.Location }}</div>
                 </div>
-                <div v-if="selectedBook.Borrowed" class="modal-field borrowed-info">
-                  <strong>Status:</strong> Borrowed by {{ selectedBook.Borrowed }}
+                <div v-if="selectedBook.Borrowed" class="modal-field modal-field-status borrowed-info">
+                  <div class="modal-key">Status</div>
+                  <div class="modal-value">Borrowed by {{ selectedBook.Borrowed }}</div>
                 </div>
-                <div v-if="selectedBook.Notes && selectedBook.Notes.trim()" class="modal-field">
-                  <strong>Notes:</strong> 
-                  <p>{{ selectedBook.Notes }}</p>
+                <div v-if="selectedBook.Notes && selectedBook.Notes.trim()" class="modal-field modal-field-notes">
+                  <div class="modal-key">Notes</div>
+                  <div class="modal-value">{{ selectedBook.Notes }}</div>
                 </div>
               </div>
             </div>

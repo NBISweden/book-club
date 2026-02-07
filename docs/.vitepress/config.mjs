@@ -10,7 +10,7 @@ export default defineConfig({
     base: '/book-club/', // Assuming repo name is book-club
     themeConfig: {
         logo: '/favicon.svg',
-        cardsPerRow: 4, // Number of book cards per row (default: 4)
+        cardsPerRow: 5, // Number of book cards per row (default: 4)
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Google Sheet', link: `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}` }
