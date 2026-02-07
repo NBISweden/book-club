@@ -67,11 +67,14 @@ export default defineConfig({
         ],
 
         footer: {
-            message: 'NBIS Book Club',
-            copyright: `${new Date().getFullYear()} NBIS`
+            message: (() => {
+                const now = new Date();
+                const date = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+                return `Last Updated: ${date} at ${time}`;
+            })(),
+            copyright: `${new Date().getFullYear()} NBIS Book Club`
         },
-
-        // Search removed as per user request
     },
     head: [
         ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],

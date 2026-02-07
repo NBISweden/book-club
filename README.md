@@ -15,6 +15,8 @@ See the [About page](https://nbisweden.github.io/book-club/about.html) for infor
 
 The site is built using VitePress, which serves the static content and fetches book data from a JSON file generated from a Google Sheet. The data fetching is handled by a Node.js script that runs as part of the build process. A Dockerfile is used to create a Docker container built by GitHub Actions and pushed to GitHub Container Registry. This container is then used by GitHub Actions to build and deploy the static site to GitHub Pages.
 
+The website is rebuilt and redeployed every 24 hours to ensure the content is up to date with respect to the Google Sheet, but you can also trigger a manual rebuild from the GitHub Actions tab.
+
 ### Setup
 
 1.  **Node Version**: Ensure you are in an environment with Node.js version (v18+).
