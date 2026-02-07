@@ -4,6 +4,10 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
+# Accept build argument for Google Sheet ID
+ARG GOOGLE_SHEET_ID
+ENV GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
+
 # Copy package files
 COPY package*.json ./
 
