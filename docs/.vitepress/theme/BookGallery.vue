@@ -12,6 +12,8 @@ const selectedOwner = ref('');
 const selectedLocation = ref('');
 const selectedSort = ref('default');
 const loading = ref(true);
+const selectedBook = ref(null);
+const showModal = ref(false);
 
 const cardsPerRow = computed(() => theme.value.cardsPerRow || 4);
 
@@ -84,11 +86,21 @@ const getCover = (book) => {
   if (book.Cover && book.Cover.trim() !== '') {
     return book.Cover;
   }
-  return withBase('/cover-placeholder.svg');
+  return withBase('/cover-placeholder.jpg');
 };
 
 const handleImageError = (e) => {
-  e.target.src = withBase('/cover-placeholder.svg');
+  e.target.src = withBase('/cover-placeholder.jpg');
+};
+
+const openModal = (book) => {
+  selectedBook.value = book;
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  selectedBook.value = null;
 };
 </script>
 
@@ -154,6 +166,7 @@ const handleImageError = (e) => {
         :key="index" 
         class="book-card"
         :class="{ 'borrowed': isBorrowed(book) }"
+        @click="openModal(book)"
       >
         <div class="book-cover-wrapper">
 <img 
@@ -190,5 +203,47 @@ const handleImageError = (e) => {
     <div v-else-if="!loading && filteredBooks.length === 0" class="no-results">
         No books found matching filters.
     </div>
+
+    <!-- Modal -->
+    <transition name="modal">
+      <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+        <div class="modal-content">
+          <div class="modal-body" v-if="selectedBook">
+            <div class="modal-left">
+              <img 
+                :src="getCover(selectedBook)" 
+                @error="handleImageError"
+                :alt="selectedBook.Title" 
+                class="modal-cover" 
+              />
+            </div>
+            
+            <div class="modal-right">
+              <h2 class="modal-title">{{ selectedBook.Title }}</h2>
+              <p class="modal-author">by {{ selectedBook.Author }}</p>
+              
+              <div class="modal-info">
+                <div v-if="selectedBook.Language" class="modal-field">
+                  <strong>Language:</strong> {{ selectedBook.Language }}
+                </div>
+                <div v-if="selectedBook.Owner" class="modal-field">
+                  <strong>Owner:</strong> {{ selectedBook.Owner }}
+                </div>
+                <div v-if="selectedBook.Location" class="modal-field">
+                  <strong>Location:</strong> {{ selectedBook.Location }}
+                </div>
+                <div v-if="selectedBook.Borrowed" class="modal-field borrowed-info">
+                  <strong>Status:</strong> Borrowed by {{ selectedBook.Borrowed }}
+                </div>
+                <div v-if="selectedBook.Notes && selectedBook.Notes.trim()" class="modal-field">
+                  <strong>Notes:</strong> 
+                  <p>{{ selectedBook.Notes }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
