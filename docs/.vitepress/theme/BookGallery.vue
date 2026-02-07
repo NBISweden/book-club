@@ -1,21 +1,30 @@
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { withBase, useData } from 'vitepress';
 
 const { theme } = useData();
 
 const books = ref([]);
 const searchQuery = ref('');
-const selectedLanguage = ref('');
-const selectedOwner = ref('');
-const selectedLocation = ref('');
-const selectedSort = ref('default');
+const filterValues = reactive({});
+const selectedSort = ref('reverse');
 const loading = ref(true);
 const selectedBook = ref(null);
 const showModal = ref(false);
 
 const cardsPerRow = computed(() => theme.value.cardsPerRow || 4);
+
+// Get field configuration from theme
+const bookFields = computed(() => theme.value.bookFields || {});
+const coverField = computed(() => bookFields.value.coverField || 'Cover');
+const titleField = computed(() => bookFields.value.titleField || 'Title');
+const authorField = computed(() => bookFields.value.authorField || 'Author');
+const borrowedField = computed(() => bookFields.value.borrowedField || 'Borrowed');
+const cardTags = computed(() => bookFields.value.cardTags || []);
+const modalFields = computed(() => bookFields.value.modalFields || []);
+const filterFields = computed(() => bookFields.value.filterFields || []);
+const sortFields = computed(() => bookFields.value.sortFields || []);
 
 onMounted(async () => {
   try {
@@ -34,13 +43,18 @@ onMounted(async () => {
 const getUniqueValues = (field) => {
   const values = books.value
     .map(book => book[field])
-    .filter(val => val && val.trim().length > 0);
+    .filter(val => val && String(val).trim().length > 0);
   return [...new Set(values)].sort();
 };
 
-const uniqueLanguages = computed(() => getUniqueValues('Language'));
-const uniqueOwners = computed(() => getUniqueValues('Owner'));
-const uniqueLocations = computed(() => getUniqueValues('Location'));
+// Dynamically get unique values for each filter field
+const uniqueFilterValues = computed(() => {
+  const result = {};
+  filterFields.value.forEach(filter => {
+    result[filter.field] = getUniqueValues(filter.field);
+  });
+  return result;
+});
 
 const filteredBooks = computed(() => {
   let result = books.value.filter(book => {
@@ -53,40 +67,43 @@ const filteredBooks = computed(() => {
       if (!matchesSearch) return false;
     }
 
-    // Dropdown filters
-    if (selectedLanguage.value && book.Language !== selectedLanguage.value) return false;
-    if (selectedOwner.value && book.Owner !== selectedOwner.value) return false;
-    if (selectedLocation.value && book.Location !== selectedLocation.value) return false;
+    // Dynamic dropdown filters
+    for (const field in filterValues) {
+      if (filterValues[field] && book[field] !== filterValues[field]) {
+        return false;
+      }
+    }
 
     return true;
   });
 
-  // Apply sorting
-  if (selectedSort.value === 'language') {
-    result.sort((a, b) => (a.Language || '').localeCompare(b.Language || ''));
-  } else if (selectedSort.value === 'owner') {
-    result.sort((a, b) => (a.Owner || '').localeCompare(b.Owner || ''));
-  } else if (selectedSort.value === 'location') {
-    result.sort((a, b) => (a.Location || '').localeCompare(b.Location || ''));
+  // Apply sorting dynamically
+  if (selectedSort.value && selectedSort.value !== 'default' && selectedSort.value !== 'reverse') {
+    const sortField = selectedSort.value;
+    result.sort((a, b) => (a[sortField] || '').toString().localeCompare((b[sortField] || '').toString()));
   } else if (selectedSort.value === 'reverse') {
-    // Keep original order (no reverse)
-  } else {
-    // default sort (reverse order as input)
     result.reverse();
   }
+  // else: default keeps the order as-is from books.json
 
   return result;
 });
 
 const isBorrowed = (book) => {
-  return book.Borrowed && book.Borrowed.trim().length > 0;
+  const borrowedValue = book[borrowedField.value];
+  return borrowedValue && String(borrowedValue).trim().length > 0;
 };
 
 const getCover = (book) => {
-  if (book.Cover && book.Cover.trim() !== '') {
-    return book.Cover;
+  const coverValue = book[coverField.value];
+  if (coverValue && String(coverValue).trim() !== '') {
+    return coverValue;
   }
   return withBase('/cover-placeholder.jpg');
+};
+
+const getFieldValue = (book, field) => {
+  return book[field] || '';
 };
 
 const handleImageError = (e) => {
@@ -110,48 +127,42 @@ const closeModal = () => {
       <input 
         v-model="searchQuery" 
         type="text" 
-        placeholder="Search books..." 
+        placeholder="Search for books..." 
         class="search-input"
       />
       
       <div class="filters-container">
-        <div class="filter-group">
-          <label for="language-filter" class="filter-label">Language</label>
-          <select v-model="selectedLanguage" id="language-filter" class="filter-select">
-            <option value="">All Languages</option>
-            <option v-for="lang in uniqueLanguages" :key="lang" :value="lang">
-              {{ lang }}
+        <!-- Dynamic filter dropdowns -->
+        <div 
+          v-for="filter in filterFields" 
+          :key="filter.field" 
+          class="filter-group"
+        >
+          <label :for="`${filter.field}-filter`" class="filter-label">{{ filter.label }}</label>
+          <select v-model="filterValues[filter.field]" :id="`${filter.field}-filter`" class="filter-select">
+            <option value="">All {{ filter.label }}s</option>
+            <option 
+              v-for="value in uniqueFilterValues[filter.field]" 
+              :key="value" 
+              :value="value"
+            >
+              {{ value }}
             </option>
           </select>
         </div>
 
-        <div class="filter-group">
-          <label for="owner-filter" class="filter-label">Owner</label>
-          <select v-model="selectedOwner" id="owner-filter" class="filter-select">
-            <option value="">All Owners</option>
-            <option v-for="owner in uniqueOwners" :key="owner" :value="owner">
-              {{ owner }}
-            </option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label for="location-filter" class="filter-label">Location</label>
-          <select v-model="selectedLocation" id="location-filter" class="filter-select">
-            <option value="">All Locations</option>
-            <option v-for="location in uniqueLocations" :key="location" :value="location">
-              {{ location }}
-            </option>
-          </select>
-        </div>
-
+        <!-- Dynamic sort dropdown -->
         <div class="filter-group">
           <label for="sort-filter" class="filter-label">Sort</label>
           <select v-model="selectedSort" id="sort-filter" class="filter-select">
             <option value="default">Default</option>
-            <option value="language">By Language</option>
-            <option value="owner">By Owner</option>
-            <option value="location">By Location</option>
+            <option 
+              v-for="sort in sortFields" 
+              :key="sort.field" 
+              :value="sort.field"
+            >
+              {{ sort.label }}
+            </option>
             <option value="reverse">Reverse</option>
           </select>
         </div>
@@ -169,24 +180,32 @@ const closeModal = () => {
         @click="openModal(book)"
       >
         <div class="book-cover-wrapper">
-<img 
+          <img 
             :src="getCover(book)" 
             @error="handleImageError"
-            :alt="book.Title" 
+            :alt="getFieldValue(book, titleField)" 
             class="book-cover" 
             loading="lazy" 
           />
-          <div v-if="isBorrowed(book)" class="borrowed-badge">Borrowed by {{ book.Borrowed }}</div>
+          <div v-if="isBorrowed(book)" class="borrowed-badge">
+            Borrowed by {{ getFieldValue(book, borrowedField) }}
+          </div>
         </div>
         
         <div class="book-details">
-          <h4 class="book-title">{{ book.Title }}</h4>
-          <p class="book-author">by {{ book.Author }}</p>
+          <h4 class="book-title">{{ getFieldValue(book, titleField) }}</h4>
+          <p class="book-author">by {{ getFieldValue(book, authorField) }}</p>
           
           <div class="tags">
-            <span v-if="book.Language" class="tag language">{{ book.Language }}</span>
-            <span v-if="book.Owner" class="tag owner">{{ book.Owner }}</span>
-            <span v-if="book.Location" class="tag location">{{ book.Location }}</span>
+            <template v-for="tag in cardTags" :key="tag.field">
+              <span 
+                v-if="getFieldValue(book, tag.field)" 
+                class="tag"
+                :class="tag.cssClass"
+              >
+                {{ getFieldValue(book, tag.field) }}
+              </span>
+            </template>
           </div>
         </div>
       </div>
@@ -213,36 +232,33 @@ const closeModal = () => {
               <img 
                 :src="getCover(selectedBook)" 
                 @error="handleImageError"
-                :alt="selectedBook.Title" 
+                :alt="getFieldValue(selectedBook, titleField)" 
                 class="modal-cover" 
               />
             </div>
             
             <div class="modal-right">
-              <h2 class="modal-title">{{ selectedBook.Title }}</h2>
-              <p class="modal-author">by {{ selectedBook.Author }}</p>
+              <h2 class="modal-title">{{ getFieldValue(selectedBook, titleField) }}</h2>
+              <p class="modal-author">by {{ getFieldValue(selectedBook, authorField) }}</p>
               
               <div class="modal-info">
-                <div v-if="selectedBook.Language" class="modal-field modal-field-language">
-                  <div class="modal-key">Language</div>
-                  <div class="modal-value">{{ selectedBook.Language }}</div>
-                </div>
-                <div v-if="selectedBook.Owner" class="modal-field modal-field-owner">
-                  <div class="modal-key">Owner</div>
-                  <div class="modal-value">{{ selectedBook.Owner }}</div>
-                </div>
-                <div v-if="selectedBook.Location" class="modal-field modal-field-location">
-                  <div class="modal-key">Location</div>
-                  <div class="modal-value">{{ selectedBook.Location }}</div>
-                </div>
-                <div v-if="selectedBook.Borrowed" class="modal-field modal-field-status borrowed-info">
+                <!-- Borrowed status displayed separately if present -->
+                <div v-if="isBorrowed(selectedBook)" class="modal-field modal-field-status borrowed-info">
                   <div class="modal-key">Status</div>
-                  <div class="modal-value">Borrowed by {{ selectedBook.Borrowed }}</div>
+                  <div class="modal-value">Borrowed by {{ getFieldValue(selectedBook, borrowedField) }}</div>
                 </div>
-                <div v-if="selectedBook.Notes && selectedBook.Notes.trim()" class="modal-field modal-field-notes">
-                  <div class="modal-key">Notes</div>
-                  <div class="modal-value">{{ selectedBook.Notes }}</div>
-                </div>
+                
+                <!-- Dynamic modal fields from configuration -->
+                <template v-for="field in modalFields" :key="field.field">
+                  <div 
+                    v-if="getFieldValue(selectedBook, field.field)" 
+                    class="modal-field"
+                    :class="field.cssClass"
+                  >
+                    <div class="modal-key">{{ field.label }}</div>
+                    <div class="modal-value">{{ getFieldValue(selectedBook, field.field) }}</div>
+                  </div>
+                </template>
               </div>
             </div>
           </div>

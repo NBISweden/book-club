@@ -47,30 +47,13 @@ const fetchUrl = (url) => {
                     trim: true
                 });
 
-                // Filter out rows that are entirely empty or missing title
-                const validRecords = records.filter(book => book.Title && book.Title.trim() !== '');
+                // Filter out rows where all values are empty
+                const nonEmptyRecords = records.filter(row => 
+                    Object.values(row).some(val => val && val.trim() !== '')
+                );
 
-                // Helper to clean formula strings (e.g. =IMAGE("url") or ="url")
-                const cleanField = (val) => {
-                    if (!val || typeof val !== 'string') return val;
-                    // Handle =IMAGE("url")
-                    const imgMatch = val.match(/^=IMAGE\s*\(\s*["']([^"']+)["']/i);
-                    if (imgMatch) return imgMatch[1];
-                    // Handle ="url"
-                    if (val.startsWith('="') && val.endsWith('"')) {
-                        return val.substring(2, val.length - 1);
-                    }
-                    return val;
-                };
-
-                // clean the Cover field specifically, or all fields if desired
-                const cleanedRecords = validRecords.map(book => ({
-                    ...book,
-                    Cover: cleanField(book.Cover)
-                }));
-
-                fs.writeFileSync(OUTPUT_FILE, JSON.stringify(cleanedRecords, null, 2));
-                console.log(`Successfully saved ${cleanedRecords.length} books to ${OUTPUT_FILE}`);
+                fs.writeFileSync(OUTPUT_FILE, JSON.stringify(nonEmptyRecords, null, 2));
+                console.log(`Successfully saved ${nonEmptyRecords.length} books to ${OUTPUT_FILE}`);
                 process.exit(0);
             } catch (error) {
                 console.error('Error parsing CSV:', error.message);

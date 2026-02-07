@@ -11,6 +11,46 @@ export default defineConfig({
     themeConfig: {
         logo: '/favicon.svg',
         cardsPerRow: 5, // Number of book cards per row (default: 4)
+        
+        // Field configuration for book display
+        bookFields: {
+            // Primary display fields (always shown if present)
+            coverField: 'cover',           // Field containing cover image URL
+            titleField: 'title',           // Field containing title
+            authorField: 'author',         // Field containing author
+            borrowedField: 'borrowed',     // Field indicating borrowed status
+            
+            // Fields displayed as tags in cards
+            cardTags: [
+                { field: 'language', label: 'Language', cssClass: 'language' },
+                { field: 'owner', label: 'Owner', cssClass: 'owner' },
+                { field: 'location', label: 'Location', cssClass: 'location' }
+            ],
+            
+            // Fields displayed in modal (in order)
+            modalFields: [
+                { field: 'language', label: 'Language', cssClass: 'modal-field-language' },
+                { field: 'owner', label: 'Owner', cssClass: 'modal-field-owner' },
+                { field: 'location', label: 'Location', cssClass: 'modal-field-location' },
+                { field: 'isbn', label: 'ISBN', cssClass: 'modal-field-isbn' },
+                { field: 'notes', label: 'Notes', cssClass: 'modal-field-notes' }
+            ],
+            
+            // Fields available for filtering
+            filterFields: [
+                { field: 'language', label: 'Language' },
+                { field: 'owner', label: 'Owner' },
+                { field: 'location', label: 'Location' }
+            ],
+            
+            // Fields available for sorting
+            sortFields: [
+                { field: 'language', label: 'By Language' },
+                { field: 'owner', label: 'By Owner' },
+                { field: 'location', label: 'By Location' }
+            ]
+        },
+        
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Google Sheet', link: `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}` }
