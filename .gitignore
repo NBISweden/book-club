@@ -17,6 +17,7 @@ yarn.lock
 .env.local
 .env.*.local
 prompt.txt
+to-do.txt
 
 # IDE
 .vscode/
