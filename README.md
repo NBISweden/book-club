@@ -7,12 +7,7 @@ A VitePress site to display the NBIS Book Club collection.
 
 ## Setup
 
-1.  **Node Version**: Ensure you are using the `nodejs-24` conda environment or a compatible Node.js version (v18+).
-
-```bash
-conda activate nodejs-24
-```
-
+1.  **Node Version**: Ensure you are in an environment with Node.js version (v18+).
 2.  **Install Dependencies**:
 
 ```bash
@@ -27,14 +22,12 @@ Start the development server:
 npm run docs:dev
 ```
 
-This will start the server at `http://localhost:5173`.
+This will fetch the data and start the server at `http://localhost:5173`.
 
 ## Data Fetching
 
-The text used to populate the site is fetched from a Google Sheet.
-**Note**: The Google Sheet must be openly accessible via link. currently the script uses a mock fallback if the fetch fails (returns 401).
+To only fetch the data:
 
-To update the data:
 ```bash
 npm run fetch-data
 ```
