@@ -1,16 +1,21 @@
-
-import 'dotenv/config'; // Load .env
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse/sync';
 
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+// Check environment first, then fall back to .env file
+let SHEET_ID = process.env.GOOGLE_SHEET_ID;
+if (!SHEET_ID) {
+    // Only load .env if not found in environment
+    await import('dotenv/config');
+    SHEET_ID = process.env.GOOGLE_SHEET_ID;
+}
+
 const EXPORT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 const OUTPUT_FILE = path.resolve('docs/public/books.json');
 
 if (!SHEET_ID) {
-    console.error('Error: GOOGLE_SHEET_ID is not defined in .env file');
+    console.error('Error: GOOGLE_SHEET_ID is not defined in environment or .env file');
     process.exit(1);
 }
 
