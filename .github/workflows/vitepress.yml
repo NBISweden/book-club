@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: vitepress
 
 on:
   push:
@@ -25,7 +25,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-deploy:
+  vitepress:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:

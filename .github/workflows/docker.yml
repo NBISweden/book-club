@@ -1,4 +1,4 @@
-name: Docker Build
+name: docker
 
 on:
   push:
@@ -9,7 +9,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  docker-build-and-push:
+  docker:
     runs-on: ubuntu-latest
     permissions:
       contents: read
