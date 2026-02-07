@@ -68,7 +68,7 @@ export default defineConfig({
 
         footer: {
             message: 'NBIS Book Club',
-            copyright: '2026 NBIS'
+            copyright: `${new Date().getFullYear()} NBIS`
         },
 
         // Search removed as per user request
