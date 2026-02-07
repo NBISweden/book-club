@@ -61,6 +61,8 @@ jobs:
             org.opencontainers.image.version=${{ steps.meta.outputs.version }}
             org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
             org.opencontainers.image.revision=${{ github.sha }}
+          build-args: |
+            GOOGLE_SHEET_ID=${{ secrets.GOOGLE_SHEET_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
