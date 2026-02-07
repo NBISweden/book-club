@@ -20,39 +20,39 @@ export default defineConfig({
         // Field configuration for book display
         bookFields: {
             // Primary display fields (always shown if present)
-            coverField: 'cover',           // Field containing cover image URL
-            titleField: 'title',           // Field containing title
-            authorField: 'author',         // Field containing author
-            borrowedField: 'borrowed',     // Field indicating borrowed status
+            coverField: 'Cover',           // Field containing cover image URL
+            titleField: 'Title',           // Field containing title
+            authorField: 'Author',         // Field containing author
+            borrowedField: 'Borrowed',     // Field indicating borrowed status
             
             // Fields displayed as tags in cards
             cardTags: [
-                { field: 'language', label: 'Language', cssClass: 'language' },
-                { field: 'owner', label: 'Owner', cssClass: 'owner' },
-                { field: 'location', label: 'Location', cssClass: 'location' }
+                { field: 'Language', label: 'Language', cssClass: 'language' },
+                { field: 'Owner', label: 'Owner', cssClass: 'owner' },
+                { field: 'Location', label: 'Location', cssClass: 'location' }
             ],
             
             // Fields displayed in modal (in order)
             modalFields: [
-                { field: 'language', label: 'Language', cssClass: 'modal-field-language' },
-                { field: 'owner', label: 'Owner', cssClass: 'modal-field-owner' },
-                { field: 'location', label: 'Location', cssClass: 'modal-field-location' },
-                { field: 'isbn', label: 'ISBN', cssClass: 'modal-field-isbn' },
-                { field: 'notes', label: 'Notes', cssClass: 'modal-field-notes' }
+                { field: 'Language', label: 'Language', cssClass: 'modal-field-language' },
+                { field: 'Owner', label: 'Owner', cssClass: 'modal-field-owner' },
+                { field: 'Location', label: 'Location', cssClass: 'modal-field-location' },
+                { field: 'ISBN', label: 'ISBN', cssClass: 'modal-field-isbn' },
+                { field: 'Notes', label: 'Notes', cssClass: 'modal-field-notes' }
             ],
             
             // Fields available for filtering
             filterFields: [
-                { field: 'language', label: 'Language' },
-                { field: 'owner', label: 'Owner' },
-                { field: 'location', label: 'Location' }
+                { field: 'Language', label: 'Language' },
+                { field: 'Owner', label: 'Owner' },
+                { field: 'Location', label: 'Location' }
             ],
             
             // Fields available for sorting
             sortFields: [
-                { field: 'language', label: 'By Language' },
-                { field: 'owner', label: 'By Owner' },
-                { field: 'location', label: 'By Location' }
+                { field: 'Language', label: 'By Language' },
+                { field: 'Owner', label: 'By Owner' },
+                { field: 'Location', label: 'By Location' }
             ]
         },
         

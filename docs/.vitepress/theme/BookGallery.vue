@@ -113,6 +113,13 @@ const handleImageError = (e) => {
   e.target.src = withBase('/cover-placeholder.jpg');
 };
 
+const toTitleCase = (str) => {
+  if (!str) return '';
+  return str.toLowerCase().split(' ').map(word => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(' ');
+};
+
 const openModal = (book) => {
   selectedBook.value = book;
   selectedBookIndex.value = filteredBooks.value.indexOf(book);
@@ -230,7 +237,7 @@ const handleKeydown = (event) => {
         
         <div class="book-details">
           <div class="book-title">{{ getFieldValue(book, titleField) }}</div>
-          <div class="book-author">by {{ getFieldValue(book, authorField) }}</div>
+          <div class="book-author">{{ getFieldValue(book, authorField) }}</div>
           
           <div class="tags">
             <template v-for="tag in cardTags" :key="tag.field">
@@ -295,8 +302,8 @@ const handleKeydown = (event) => {
             </div>
             
             <div class="modal-right">
-              <div class="modal-title">{{ getFieldValue(selectedBook, titleField) }}</div>
-              <div class="modal-author">by {{ getFieldValue(selectedBook, authorField) }}</div>
+              <div class="modal-title">{{ toTitleCase(getFieldValue(selectedBook, titleField)) }}</div>
+              <div class="modal-author">{{ getFieldValue(selectedBook, authorField) }}</div>
               
               <div class="modal-info">
                 <!-- Borrowed status displayed separately if present -->
