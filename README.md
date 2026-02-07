@@ -1,7 +1,7 @@
 
 # NBIS Book Club ![](docs/.vitepress/public/favicon-96x96.png)
 
-![Deploy to GitHub Pages](https://github.com/NBISweden/book-club/actions/workflows/deploy.yml/badge.svg)
+![GitHub Pages](https://github.com/NBISweden/book-club/actions/workflows/deploy.yml/badge.svg) ![Docker Build](https://github.com/NBISweden/book-club/actions/workflows/docker-build-push.yml/badge.svg)
 
 A VitePress site to display the NBIS Book Club collection.
 
