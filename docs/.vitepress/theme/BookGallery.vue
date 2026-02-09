@@ -132,6 +132,13 @@ const getLanguageTagColor = (language) => {
   return languageColorMap.value[language] || '#808080';
 };
 
+const formatModalFieldValue = (fieldName, value) => {
+  if (fieldName === 'Language') {
+    return String(value).toUpperCase();
+  }
+  return value;
+};
+
 const handleImageError = (e) => {
   e.target.src = withBase('/cover-placeholder.jpg');
 };
@@ -344,7 +351,7 @@ const handleKeydown = (event) => {
                     :class="field.cssClass"
                   >
                     <div class="modal-key">{{ field.label }}</div>
-                    <div class="modal-value">{{ getFieldValue(selectedBook, field.field) }}</div>
+                    <div class="modal-value">{{ formatModalFieldValue(field.field, getFieldValue(selectedBook, field.field)) }}</div>
                   </div>
                 </template>
               </div>
