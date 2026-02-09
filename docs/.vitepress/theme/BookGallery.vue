@@ -37,16 +37,11 @@ const languageColorMap = computed(() => {
     .filter(val => val && String(val).trim().length > 0)
   )];
   
-  if (uniqueLanguages.length > languageColors.value.length) {
-    throw new Error(
-      `Found ${uniqueLanguages.length} unique languages but only ${languageColors.value.length} colors defined. ` +
-      `Please add more colors to the LANGUAGE_COLORS array in config.mjs`
-    );
-  }
-  
   const colorMap = {};
   uniqueLanguages.forEach((lang, index) => {
-    colorMap[lang] = languageColors.value[index];
+    if (index < languageColors.value.length) {
+      colorMap[lang] = languageColors.value[index];
+    }
   });
   return colorMap;
 });
