@@ -8,6 +8,38 @@ const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID
 const FONT_FAMILY = 'Montserrat' // Change this to use a different Google Font
 const FONT_GOOGLE_URL = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'
 
+// Define 10 distinct colors for language tags
+const LANGUAGE_COLORS = [
+    '#FF6B6B', // Red
+    '#52C4A1',  // Green
+    '#45B7D1', // Blue
+    '#FFA07A', // Light Salmon
+    '#F7DC6F', // Yellow
+    '#BB8FCE', // Purple
+    '#85C1E2', // Sky Blue
+    '#F8B88B' // Peach
+]
+
+// Function to get language color mapping from books data
+function getLanguageColorMap(books) {
+    const languages = [...new Set(books.map(book => book.Language).filter(Boolean))]
+    
+    if (languages.length > LANGUAGE_COLORS.length) {
+        throw new Error(
+            `Found ${languages.length} unique languages but only ${LANGUAGE_COLORS.length} colors defined. ` +
+            `Please add more colors to the LANGUAGE_COLORS array in config.mjs`
+        )
+    }
+    
+    const colorMap = {}
+    languages.forEach((lang, index) => {
+        colorMap[lang] = LANGUAGE_COLORS[index]
+    })
+    return colorMap
+}
+
+export { LANGUAGE_COLORS, getLanguageColorMap }
+
 export default defineConfig({
     title: "NBIS Book Club",
     description: "A shared book collection for NBIS",
@@ -16,6 +48,7 @@ export default defineConfig({
         logo: '/favicon.svg',
         font: FONT_FAMILY, // Google Font family name
         cardsPerRow: 5, // Number of book cards per row (default: 4)
+        languageColors: LANGUAGE_COLORS,
         
         // Field configuration for book display
         bookFields: {

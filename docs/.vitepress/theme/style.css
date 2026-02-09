@@ -327,8 +327,9 @@
 }
 
 .dark .tag.language {
-  color: black;
+  color: var(--vp-c-bg);
   background: var(--vp-c-brand-dark);
+  border-color: rgba(var(--vp-c-brand-rgb), 0.2);
 }
 
 .no-results {

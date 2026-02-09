@@ -16,6 +16,9 @@ const selectedBookIndex = ref(null);
 
 const cardsPerRow = computed(() => theme.value.cardsPerRow || 4);
 
+// Get language colors from theme
+const languageColors = computed(() => theme.value.languageColors || []);
+
 // Get field configuration from theme
 const bookFields = computed(() => theme.value.bookFields || {});
 const coverField = computed(() => bookFields.value.coverField || 'Cover');
@@ -26,6 +29,27 @@ const cardTags = computed(() => bookFields.value.cardTags || []);
 const modalFields = computed(() => bookFields.value.modalFields || []);
 const filterFields = computed(() => bookFields.value.filterFields || []);
 const sortFields = computed(() => bookFields.value.sortFields || []);
+
+// Create a color map for languages
+const languageColorMap = computed(() => {
+  const uniqueLanguages = [...new Set(books.value
+    .map(book => book.Language)
+    .filter(val => val && String(val).trim().length > 0)
+  )];
+  
+  if (uniqueLanguages.length > languageColors.value.length) {
+    throw new Error(
+      `Found ${uniqueLanguages.length} unique languages but only ${languageColors.value.length} colors defined. ` +
+      `Please add more colors to the LANGUAGE_COLORS array in config.mjs`
+    );
+  }
+  
+  const colorMap = {};
+  uniqueLanguages.forEach((lang, index) => {
+    colorMap[lang] = languageColors.value[index];
+  });
+  return colorMap;
+});
 
 onMounted(async () => {
   try {
@@ -107,6 +131,10 @@ const getCover = (book) => {
 
 const getFieldValue = (book, field) => {
   return book[field] || '';
+};
+
+const getLanguageTagColor = (language) => {
+  return languageColorMap.value[language] || '#808080';
 };
 
 const handleImageError = (e) => {
@@ -245,6 +273,7 @@ const handleKeydown = (event) => {
                 v-if="getFieldValue(book, tag.field)" 
                 class="tag"
                 :class="tag.cssClass"
+                :style="tag.field === 'Language' ? { backgroundColor: getLanguageTagColor(getFieldValue(book, tag.field)) } : {}"
               >
                 {{ getFieldValue(book, tag.field) }}
               </span>
